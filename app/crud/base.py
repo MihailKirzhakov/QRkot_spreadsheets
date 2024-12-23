@@ -1,0 +1,143 @@
+# C:\Dev\cat_charity_fund\app\crud\base.py
+from typing import Optional, TypeVar, Generic, List, Dict
+
+from fastapi.encoders import jsonable_encoder
+from sqlalchemy import select, asc
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.models import User, CharityProject, Donation
+from app.schemas.charityproject import CharityProjectUpdate
+from app.schemas.donation import DonationCreate
+
+ModelType = TypeVar('ModelType')
+
+
+class CRUDBase(Generic[ModelType]):
+
+    def __init__(self, model: ModelType):
+        self.model = model
+
+    async def get(
+        self,
+        data_id: int,
+        session: AsyncSession,
+    ) -> Optional[ModelType]:
+        db_data: AsyncSession = await session.execute(
+            select(self.model).where(
+                self.model.id == data_id
+            )
+        )
+        return db_data.scalars().first()
+
+    async def get_multi(
+        self,
+        session: AsyncSession
+    ) -> list[ModelType]:
+        db_data: AsyncSession = await session.execute(select(self.model))
+        return db_data.scalars().all()
+
+    async def create(
+        self,
+        data: DonationCreate,
+        session: AsyncSession,
+        user: Optional[User] = None
+    ) -> Donation:
+        create_data = data.dict()
+        if user:
+            create_data['user_id'] = user.id
+        db_data = self.model(**create_data)
+        session.add(db_data)
+        await session.commit()
+        await session.refresh(db_data)
+        return db_data
+
+    async def update(
+        self,
+        db_data: CharityProject,
+        data: CharityProjectUpdate,
+        session: AsyncSession,
+    ) -> CharityProject:
+        encode_data = jsonable_encoder(db_data)
+        update_data = data.dict(exclude_unset=True)
+
+        for field in encode_data:
+            if field in update_data:
+                setattr(db_data, field, update_data[field])
+        session.add(db_data)
+        await session.commit()
+        await session.refresh(db_data)
+        return db_data
+
+    async def remove(
+        self,
+        db_data: CharityProject,
+        session: AsyncSession,
+    ) -> CharityProject:
+        await session.delete(db_data)
+        await session.commit()
+        return db_data
+
+    async def get_project_by_name(
+            self,
+            project_name: str,
+            session: AsyncSession,
+    ) -> Optional[int]:
+        db_project_id = await session.execute(
+            select(self.model.id).where(
+                self.model.name == project_name
+            )
+        )
+        return db_project_id.scalars().first()
+
+    async def get_all_open(
+        self,
+        session: AsyncSession,
+    ) -> list:
+        oldest_open_project: AsyncSession = await session.execute(
+            select(self.model).filter(
+                self.model.fully_invested.is_(False)
+            ).order_by(asc(self.model.create_date))
+        )
+        return oldest_open_project.scalars().all()
+
+    async def get_by_filter(
+            self,
+            session: AsyncSession,
+            filter_field: str,
+            filter_value: int,
+    ) -> list[ModelType]:
+        db_data: AsyncSession = await session.execute(
+            select(self.model).where(
+                getattr(self.model, filter_field) == filter_value
+            )
+        )
+        return db_data.scalars().all()
+
+    async def save_changes(
+        self, session: AsyncSession, *objects: ModelType
+    ) -> None:
+        for obj in objects:
+            session.add(obj)
+        await session.commit()
+
+    async def get_projects_by_completion_rate(
+        self,
+        session: AsyncSession
+    ) -> List[Dict[str, str]]:
+        projects = await session.execute(
+            select([self.model]).where(self.model.fully_invested == 1)
+        )
+        projects = projects.scalars().all()
+        project_list = []
+        for project in projects:
+            project_list.append({
+                'name': project.name,
+                'duration': project.close_date - project.create_date,
+                'description': project.description
+            })
+        project_list = sorted(project_list, key=lambda x: x['duration'])
+        return project_list
+
+
+charityproject_crud = CRUDBase(CharityProject)
+donation_crud = CRUDBase(Donation)

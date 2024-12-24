@@ -22,19 +22,17 @@ class CRUDBase(Generic[ModelType]):
         data_id: int,
         session: AsyncSession,
     ) -> Optional[ModelType]:
-        db_data: AsyncSession = await session.execute(
+        return (await session.execute(
             select(self.model).where(
                 self.model.id == data_id
             )
-        )
-        return db_data.scalars().first()
+        )).scalars().first()
 
     async def get_multi(
         self,
         session: AsyncSession
     ) -> list[ModelType]:
-        db_data: AsyncSession = await session.execute(select(self.model))
-        return db_data.scalars().all()
+        return (await session.execute(select(self.model))).scalars().all()
 
     async def create(
         self,
@@ -82,12 +80,11 @@ class CRUDBase(Generic[ModelType]):
             project_name: str,
             session: AsyncSession,
     ) -> Optional[int]:
-        db_project_id = await session.execute(
+        return (await session.execute(
             select(self.model.id).where(
                 self.model.name == project_name
             )
-        )
-        return db_project_id.scalars().first()
+        )).scalars().first()
 
     async def get_all_open(
         self,
@@ -107,12 +104,11 @@ class CRUDBase(Generic[ModelType]):
             filter_field: str,
             filter_value: int,
     ) -> list[ModelType]:
-        db_data: AsyncSession = await session.execute(
+        return (await session.execute(
             select(self.model).where(
                 getattr(self.model, filter_field) == filter_value
             )
-        )
-        return db_data.scalars().all()
+        )).scalars().all()
 
     async def save_changes(
         self, session: AsyncSession, *objects: ModelType

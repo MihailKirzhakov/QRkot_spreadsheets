@@ -3,9 +3,9 @@ from http import HTTPStatus
 from fastapi import HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.constants.constants import ConstantFailPhrases
 from app.crud.base import charityproject_crud
 from app.models import CharityProject
-from app.constants.constants import ConstantFailPhrases
 
 
 async def check_name_duplicate(
@@ -47,7 +47,7 @@ async def check_full_amount(
 
 
 def check_close_project(project):
-    if project.fully_invested is True:
+    if project.fully_invested:
         raise HTTPException(
             status_code=HTTPStatus.BAD_REQUEST,
             detail=ConstantFailPhrases.EDIT_DELETE_CLOSED_PROJECT

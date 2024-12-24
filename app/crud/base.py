@@ -93,12 +93,13 @@ class CRUDBase(Generic[ModelType]):
         self,
         session: AsyncSession,
     ) -> list:
-        oldest_open_project: AsyncSession = await session.execute(
-            select(self.model).filter(
-                self.model.fully_invested.is_(False)
-            ).order_by(asc(self.model.create_date))
-        )
-        return oldest_open_project.scalars().all()
+        return (
+            await session.execute(
+                select(self.model).filter(
+                    self.model.fully_invested.is_(False)
+                ).order_by(asc(self.model.create_date))
+            )
+        ).scalars().all()
 
     async def get_by_filter(
             self,

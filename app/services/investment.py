@@ -13,10 +13,10 @@ def invest_donations(
     targets: list[Union[CharityProject, Donation]]
 ):
     remaining_donation_amount = donation_or_project.full_amount
-    invested_amount = ConstantNumbers.ZERO_NUMBER
+    invested_amount = 0
 
     for target in targets:
-        if remaining_donation_amount <= ConstantNumbers.ZERO_NUMBER:
+        if remaining_donation_amount <= 0:
             break
 
         need_donation = target.full_amount - target.invested_amount
@@ -27,14 +27,14 @@ def invest_donations(
         else:
             target.invested_amount += remaining_donation_amount
             invested_amount += remaining_donation_amount
-            remaining_donation_amount = ConstantNumbers.ZERO_NUMBER
+            remaining_donation_amount = 0
 
         if target.invested_amount >= target.full_amount:
             target.fully_invested = True
             target.close_date = datetime.now()
 
     donation_or_project.invested_amount = invested_amount
-    if remaining_donation_amount == ConstantNumbers.ZERO_NUMBER:
+    if remaining_donation_amount == 0:
         donation_or_project.close_date = datetime.now()
         donation_or_project.fully_invested = True
 

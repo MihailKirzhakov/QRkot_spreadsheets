@@ -87,3 +87,15 @@ async def spreadsheets_update_value(
             json=update_body
         )
     )
+
+
+async def get_projects_by_duration(projects):
+    project_list = []
+    for project in projects:
+        project_list.append({
+            'name': project.name,
+            'duration': project.close_date - project.create_date,
+            'description': project.description
+        })
+    project_list = sorted(project_list, key=lambda x: x['duration'])
+    return project_list

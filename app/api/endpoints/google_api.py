@@ -7,7 +7,8 @@ from app.core.google_client import get_service
 from app.core.user import current_superuser
 from app.crud.base import charityproject_crud
 from app.services.google_api import (
-    set_user_permissions, spreadsheets_create, spreadsheets_update_value
+    set_user_permissions, spreadsheets_create, spreadsheets_update_value,
+    get_projects_by_duration
 )
 
 router = APIRouter()
@@ -24,12 +25,13 @@ async def get_report(
     projects = await charityproject_crud.get_projects_by_completion_rate(
         session
     )
+    duration_projects = await get_projects_by_duration(projects)
     spreadsheet_id = await spreadsheets_create(wrapper_services)
     await set_user_permissions(spreadsheet_id, wrapper_services)
     try:
         await spreadsheets_update_value(
             spreadsheet_id,
-            projects,
+            duration_projects,
             wrapper_services
         )
     except Exception as error:

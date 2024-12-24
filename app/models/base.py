@@ -25,3 +25,12 @@ class BaseModel(Base):
     fully_invested = Column(Boolean, nullable=False, default=False)
     create_date = Column(DateTime, index=True, default=datetime.utcnow)
     close_date = Column(DateTime, index=True)
+
+    def __repr__(self):
+        return (
+            f"<{self.__class__.__name__}(full_amount={self.full_amount}, "
+            f"invested_amount={self.invested_amount}, "
+            f"fully_invested={self.fully_invested}, "
+            f"create_date={self.create_date}, "
+            f"close_date={self.close_date})>"
+        )

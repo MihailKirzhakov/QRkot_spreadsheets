@@ -121,19 +121,9 @@ class CRUDBase(Generic[ModelType]):
         self,
         session: AsyncSession
     ) -> List[Dict[str, str]]:
-        projects = await session.execute(
+        return await session.execute(
             select([self.model]).where(self.model.fully_invested == 1)
-        )
-        projects = projects.scalars().all()
-        project_list = []
-        for project in projects:
-            project_list.append({
-                'name': project.name,
-                'duration': project.close_date - project.create_date,
-                'description': project.description
-            })
-        project_list = sorted(project_list, key=lambda x: x['duration'])
-        return project_list
+        ).scalars().all()
 
 
 charityproject_crud = CRUDBase(CharityProject)

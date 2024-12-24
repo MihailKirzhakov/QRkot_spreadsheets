@@ -6,7 +6,7 @@ from pydantic import Field, StrictBool, BaseModel, validator
 from app.constants.constants import ConstantNumbers, ConstantFailPhrases
 
 
-class CustomNonNegativeInt(int):
+class NonNegativeInt(int):
     @classmethod
     def __get_validators__(cls):
         yield cls.validate
@@ -26,14 +26,14 @@ class CharityProjectBase(BaseModel):
         max_length=ConstantNumbers.MAX_NAME_LENGTH,
     )
     description: str = Field(min_length=ConstantNumbers.MIN_NAME_LENGTH)
-    full_amount: CustomNonNegativeInt
+    full_amount: NonNegativeInt
 
 
 class CharityProjectUpdate(CharityProjectBase):
     name: Optional[str]
     description: Optional[str]
-    full_amount: Optional[CustomNonNegativeInt]
-    invested_amount: Optional[CustomNonNegativeInt]
+    full_amount: Optional[NonNegativeInt]
+    invested_amount: Optional[NonNegativeInt]
     create_date: Optional[datetime]
     close_date: Optional[datetime]
     fully_invested: Optional[StrictBool]
@@ -52,7 +52,7 @@ class CharityProjectUpdate(CharityProjectBase):
 
 class CharityProjectDB(CharityProjectBase):
     id: int
-    invested_amount: CustomNonNegativeInt = Field(
+    invested_amount: NonNegativeInt = Field(
         example=ConstantNumbers.EXAMPLE_AMOUNT
     )
     fully_invested: StrictBool = Field(example=False)

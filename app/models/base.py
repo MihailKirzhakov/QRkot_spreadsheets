@@ -12,11 +12,8 @@ class BaseModel(Base):
     __table_args__ = (
         CheckConstraint('full_amount > 0', name='check_full_amount_positive'),
         CheckConstraint(
-            'invested_amount >= 0', name='check_invested_amount_non_negative'
-        ),
-        CheckConstraint(
-            'invested_amount <= full_amount',
-            name='check_invested_amount_not_exceed_full_amount'
+            'invested_amount >= 0 AND invested_amount <= full_amount',
+            name='check_invested_amount_validity'
         ),
     )
 

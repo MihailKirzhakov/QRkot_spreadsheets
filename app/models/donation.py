@@ -7,3 +7,6 @@ from app.models.base import BaseModel
 class Donation(BaseModel):
     user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
     comment = Column(Text)
+
+    def __repr__(self):
+        return f"<Donation(user_id={self.user_id}, comment={self.comment})>"

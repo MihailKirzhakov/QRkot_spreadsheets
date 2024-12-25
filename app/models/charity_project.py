@@ -10,3 +10,9 @@ class CharityProject(BaseModel):
         String(ConstantNumbers.MAX_NAME_LENGTH), unique=True, nullable=False
     )
     description = Column(Text, nullable=False)
+
+    def __repr__(self):
+        return (
+            f'<CharityProject(name={self.name}, '
+            f'description={self.description[:20]}...)>'
+        )

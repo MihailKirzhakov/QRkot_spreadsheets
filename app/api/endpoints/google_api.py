@@ -36,4 +36,4 @@ async def get_report(
         )
     except Exception as error:
         raise HTTPException(status_code=500, detail=error)
-    return projects
+    return print('https://docs.google.com/spreadsheets/d/' + spreadsheet_id)

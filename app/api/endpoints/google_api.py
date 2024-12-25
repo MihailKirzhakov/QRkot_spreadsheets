@@ -26,7 +26,7 @@ async def get_report(
         session
     )
     duration_projects = await get_projects_by_duration(projects)
-    spreadsheet_id = await spreadsheets_create(wrapper_services)
+    spreadsheet_id, report_url = await spreadsheets_create(wrapper_services)
     await set_user_permissions(spreadsheet_id, wrapper_services)
     try:
         await spreadsheets_update_value(
@@ -36,4 +36,4 @@ async def get_report(
         )
     except Exception as error:
         raise HTTPException(status_code=500, detail=error)
-    return print('https://docs.google.com/spreadsheets/d/' + spreadsheet_id)
+    return report_url

@@ -85,3 +85,14 @@ def check_project_before_edit(project):
             status_code=HTTPStatus.UNPROCESSABLE_ENTITY,
             detail=ConstantFailPhrases.CHANGE_INVESTMENT_AMOUNT
         )
+
+
+def validate_data_size(update_body, max_rows, max_cols):
+    num_rows = len(update_body)
+    num_cols = len(update_body[0]) if num_rows > 0 else 0
+
+    if num_rows > max_rows or num_cols > max_cols:
+        raise ValueError(
+            "Данные не помещаются в таблицу. "
+            "Проверьте количество строк и столбцов."
+        )

@@ -2,7 +2,6 @@ from datetime import datetime
 
 from aiogoogle import Aiogoogle
 
-from app.api.validators import validate_data_size
 from app.constants.constants import ConstantNumbers
 from app.core.config import settings
 
@@ -84,7 +83,10 @@ async def spreadsheets_update_value(
     }
 
     if len(projects) > ConstantNumbers.MAX_ROWS:
-        raise ValueError("Слишком много проектов для добавления в таблицу.")
+        raise ValueError(
+            'Данные не помещаются в таблицу. '
+            f'Максимальное число строк {ConstantNumbers.MAX_ROWS}.'
+        )
 
     range_end_row = len(table_values)
     range_end_col = ConstantNumbers.MAX_COLS

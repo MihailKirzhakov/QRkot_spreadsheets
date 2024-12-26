@@ -18,8 +18,8 @@ SPREADSHEET_TEMPLATE: dict = dict(
         sheetId=0,
         title='Лист1',
         gridProperties=dict(
-            rowCount=100,
-            columnCount=11,
+            rowCount=ConstantNumbers.MAX_ROWS,
+            columnCount=ConstantNumbers.MAX_COLS,
         )
     ))]
 )
@@ -63,12 +63,6 @@ async def set_user_permissions(
     )
 
 
-def create_range_r1c1(start_row, start_col, num_rows, num_cols):
-    end_row = start_row + num_rows - 1
-    end_col = start_col + num_cols - 1
-    return f"R{start_row}C{start_col}:R{end_row}C{end_col}"
-
-
 async def spreadsheets_update_value(
         spreadsheet_id: str,
         projects: list,
@@ -77,7 +71,7 @@ async def spreadsheets_update_value(
     now_date_time = datetime.now().strftime(FORMAT)
     service = await wrapper_services.discover('sheets', 'v4')
     table_values = [
-        TABLE_VALUES_TEMPLATE[0][:1] + [now_date_time],
+        TABLE_VALUES_TEMPLATE[0][1] + now_date_time,
         *[list(map(
             str,
             [project['name'], project['duration'], project['description']])
@@ -88,23 +82,17 @@ async def spreadsheets_update_value(
         'majorDimension': 'ROWS',
         'values': table_values
     }
-    validate_data_size(
-        table_values,
-        ConstantNumbers.MAX_ROWS,
-        ConstantNumbers.MAX_COLS
-    )
-    num_rows = len(table_values)
-    num_cols = len(table_values[0]) if num_rows > 0 else 0
-    range = create_range_r1c1(
-        ConstantNumbers.START_ROW,
-        ConstantNumbers.START_COL,
-        num_rows,
-        num_cols
-    )
+
+    if len(projects) > ConstantNumbers.MAX_ROWS:
+        raise ValueError("Слишком много проектов для добавления в таблицу.")
+
+    range_end_row = len(table_values)
+    range_end_col = ConstantNumbers.MAX_COLS
+
     await wrapper_services.as_service_account(
         service.spreadsheets.values.update(
             spreadsheetId=spreadsheet_id,
-            range=range,
+            range=f'R1C1:R{range_end_row}C{range_end_col}',
             valueInputOption='USER_ENTERED',
             json=update_body
         )

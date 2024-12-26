@@ -26,7 +26,5 @@ class ConstantNumbers:
     GET_DATA_LIMIT = 1
     MIN_NAME_LENGTH = 1
     MAX_NAME_LENGTH = 100
-    START_ROW = 1
-    START_COL = 1
     MAX_ROWS = 100
-    MAX_COLS = 3
+    MAX_COLS = 11

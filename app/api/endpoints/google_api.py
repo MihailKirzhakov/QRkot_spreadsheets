@@ -1,6 +1,7 @@
 from aiogoogle import Aiogoogle
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
+from http import HTTPStatus
 
 from app.core.db import get_async_session
 from app.core.google_client import get_service
@@ -34,6 +35,8 @@ async def get_report(
             duration_projects,
             wrapper_services
         )
-    except Exception as error:
-        raise HTTPException(status_code=500, detail=error)
+    except ValueError as error:
+        raise HTTPException(
+            status_code=HTTPStatus.UNPROCESSABLE_ENTITY, detail=str(error)
+        )
     return report_url

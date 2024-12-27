@@ -1,6 +1,5 @@
 # Проект QRkot_spreadseets QRKot
 
-## Автор. Mihail kirzhakov, 
 
 ## Технологии проекта
     Совокупность языка программирования Python и фреймворка FastAPI.
@@ -17,23 +16,23 @@
 Клонировать репозиторий и перейти в него в командной строке:
 
 ```
-https://github.com/ViacheslavMelnikov//QRkot_spreadsheets.git
+git clone git@github.com:MihailKirzhakov/QRkot_spreadsheets.git
 ```
 
 ```
-cd cat_charity_fund
+cd QRkot_spreadsheets
 ```
 
 Cоздать виртуальное окружение:
 
 ```
-python3 -m venv venv
+py -3.9 -m venv venv
 ```
 
 Активировать виртуальное окружение:
 
 ```
-source venv/bin/activate
+source venv/scripts/activate
 ```
 
 Установить зависимости из файла requirements.txt:
@@ -52,5 +51,4 @@ pip install -r requirements.txt
 uvicorn app.main:app
 ```
 
-
-Автор: [Вячеслав Мельников](https://github.com/ViacheslavMelnikov)
+Автор: [Михаил Киржаков](https://github.com/MihailKirzhakov)

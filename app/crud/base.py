@@ -117,7 +117,7 @@ class CRUDBase(Generic[ModelType]):
             session.add(obj)
         await session.commit()
 
-    async def get_projects_by_completion_rate(
+    async def get_objects_by_completion_rate(
         self,
         session: AsyncSession
     ) -> List[Dict[str, str]]:

@@ -1,4 +1,3 @@
-# C:\Dev\cat_charity_fund\app\services\investment.py
 from datetime import datetime
 
 from app.models.base import InvestmentBaseModel

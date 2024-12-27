@@ -6,7 +6,7 @@ from sqlalchemy import Column, Integer, Boolean, DateTime, CheckConstraint
 from app.core.db import Base
 
 
-class BaseModel(Base):
+class InvestmentBaseModel(Base):
     __abstract__ = True
 
     __table_args__ = (

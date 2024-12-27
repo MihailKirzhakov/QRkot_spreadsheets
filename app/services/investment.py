@@ -1,11 +1,11 @@
 # C:\Dev\cat_charity_fund\app\services\investment.py
 from datetime import datetime
 
-from app.models.base import BaseModel
+from app.models.base import InvestmentBaseModel
 
 
 def invest_donations(
-    donation_or_project: BaseModel,
+    donation_or_project: InvestmentBaseModel,
     targets: list
 ):
     remaining_donation_amount = donation_or_project.full_amount

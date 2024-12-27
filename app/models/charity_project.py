@@ -2,10 +2,10 @@
 from sqlalchemy import Column, String, Text
 
 from app.constants.constants import ConstantNumbers
-from app.models.base import BaseModel
+from app.models.base import InvestmentBaseModel
 
 
-class CharityProject(BaseModel):
+class CharityProject(InvestmentBaseModel):
     name = Column(
         String(ConstantNumbers.MAX_NAME_LENGTH), unique=True, nullable=False
     )

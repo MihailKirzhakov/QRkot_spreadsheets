@@ -1,4 +1,5 @@
 from datetime import datetime
+from copy import deepcopy
 
 from aiogoogle import Aiogoogle
 
@@ -32,7 +33,7 @@ TABLE_VALUES_TEMPLATE = [
 
 async def spreadsheets_create(wrapper_services: Aiogoogle) -> tuple[str, str]:
     now_date_time = datetime.now().strftime(FORMAT)
-    spreadsheet_body = SPREADSHEET_TEMPLATE.copy()
+    spreadsheet_body = deepcopy(SPREADSHEET_TEMPLATE)
     spreadsheet_body['properties']['title'] = f'Отчёт от {now_date_time}'
     service = await wrapper_services.discover('sheets', 'v4')
     response = await wrapper_services.as_service_account(
@@ -102,12 +103,9 @@ async def spreadsheets_update_value(
 
 
 async def get_projects_by_duration(projects):
-    project_list = []
-    for project in projects:
-        project_list.append({
+    return sorted(
+        [{
             'name': project.name,
             'duration': project.close_date - project.create_date,
             'description': project.description
-        })
-    project_list = sorted(project_list, key=lambda x: x['duration'])
-    return project_list
+        } for project in projects], key=lambda x: x['duration'])

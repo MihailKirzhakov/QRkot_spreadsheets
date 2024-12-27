@@ -5,8 +5,8 @@ from app.models.base import InvestmentBaseModel
 
 def invest_donations(
     donation_or_project: InvestmentBaseModel,
-    targets: list
-):
+    targets: list[InvestmentBaseModel]
+) -> list[InvestmentBaseModel]:
     remaining_donation_amount = donation_or_project.full_amount
     for target in targets:
         need_donation = target.full_amount - target.invested_amount

@@ -20,7 +20,6 @@ class ConstantFailPhrases:
 
 
 class ConstantNumbers:
-    MIN_VALIDATION_VALUE = 0
     EXAMPLE_AMOUNT = 10
     LIFETIME_JWT_STRATEGY = 3600
     GET_DATA_LIMIT = 1

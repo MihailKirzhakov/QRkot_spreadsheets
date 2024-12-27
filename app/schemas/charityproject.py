@@ -13,9 +13,7 @@ class NonNegativeInt(int):
 
     @classmethod
     def validate(cls, value):
-        if not isinstance(value, int) or (
-            value < ConstantNumbers.MIN_VALIDATION_VALUE
-        ):
+        if not isinstance(value, int) or (value < 0):
             raise ValueError(ConstantFailPhrases.VALLUE_AMOUNT)
         return value
 

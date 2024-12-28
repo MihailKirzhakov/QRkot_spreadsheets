@@ -3,7 +3,7 @@ from copy import deepcopy
 
 from aiogoogle import Aiogoogle
 
-from app.constants.constants import MAX_ROWS
+from app.constants.constants import MAX_ROWS, MAX_COLS
 from app.core.config import settings
 
 FORMAT = '%Y/%m/%d %H:%M:%S'
@@ -14,8 +14,6 @@ TABLE_VALUES_TEMPLATE = [
     ['Топ проектов по скорости закрытия'],
     ['Название проекта', 'Время сбора', 'Описание']
 ]
-
-range_cols = len(TABLE_VALUES_TEMPLATE[2])
 
 SPREADSHEET_TEMPLATE: dict = dict(
     properties=dict(
@@ -28,13 +26,14 @@ SPREADSHEET_TEMPLATE: dict = dict(
         title='Лист1',
         gridProperties=dict(
             rowCount=MAX_ROWS,
-            columnCount=range_cols,
+            columnCount=MAX_COLS,
         )
     ))]
 )
 
 ERROR_MESSAGE = (
     'Данные не помещаются в таблицу. '
+    'Габариты вставляемой таблицы: {} строк, {} колонок. '
     'Максимальное число строк: {}, максимальное число колонок: {}.'
 )
 
@@ -77,7 +76,7 @@ async def spreadsheets_update_value(
     service = await wrapper_services.discover('sheets', 'v4')
     TABLE_VALUES_TEMPLATE[0][1] = datetime.now().strftime(FORMAT)
     table_values = [
-        TABLE_VALUES_TEMPLATE[0],
+        *TABLE_VALUES_TEMPLATE,
         *[list(map(
             str,
             [project['name'], project['duration'], project['description']])
@@ -89,10 +88,24 @@ async def spreadsheets_update_value(
         'values': table_values
     }
 
-    range_rows = (len(TABLE_VALUES_TEMPLATE) + len(projects))
+    range_rows = len(table_values)
+    range_cols = len(table_values[2])
+    row_count = (
+        SPREADSHEET_TEMPLATE['sheets'][0][
+            'properties'
+        ]['gridProperties']['rowCount']
+    )
+    column_count = (
+        SPREADSHEET_TEMPLATE['sheets'][0][
+            'properties'
+        ]['gridProperties']['columnCount']
+    )
 
-    if range_rows * range_cols > MAX_ROWS * range_cols:
-        raise ValueError(ERROR_MESSAGE.format(MAX_ROWS, range_cols))
+    if range_rows * range_cols > row_count * column_count:
+        raise ValueError(ERROR_MESSAGE.format(
+            range_rows, range_cols,
+            row_count, column_count
+        ))
 
     await wrapper_services.as_service_account(
         service.spreadsheets.values.update(

@@ -1,4 +1,3 @@
-# C:\Dev\cat_charity_fund\app\models\base.py
 from datetime import datetime
 
 from sqlalchemy import Column, Integer, Boolean, DateTime, CheckConstraint
@@ -12,7 +11,7 @@ class InvestmentBaseModel(Base):
     __table_args__ = (
         CheckConstraint('full_amount > 0', name='check_full_amount_positive'),
         CheckConstraint(
-            'invested_amount BETWEEN 0 AND full_amount',
+            '0 <= invested_amount <= full_amount',
             name='check_invested_amount_validity'
         ),
     )
@@ -25,7 +24,8 @@ class InvestmentBaseModel(Base):
 
     def __repr__(self):
         return (
-            f'{self.__class__.__name__}full_amount={self.full_amount}, '
+            f'{type(self).__name__} '
+            f'full_amount={self.full_amount}, '
             f'invested_amount={self.invested_amount}, '
             f'fully_invested={self.fully_invested}, '
             f'create_date={self.create_date}, '

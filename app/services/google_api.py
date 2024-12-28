@@ -39,9 +39,7 @@ async def spreadsheets_create(wrapper_services: Aiogoogle) -> tuple[str, str]:
     response = await wrapper_services.as_service_account(
         service.spreadsheets.create(json=spreadsheet_body)
     )
-    spreadsheet_id = response['spreadsheetId']
-    report_url = response['spreadsheetUrl']
-    return spreadsheet_id, report_url
+    return response['spreadsheetId'], response['spreadsheetUrl']
 
 
 async def set_user_permissions(
@@ -68,10 +66,10 @@ async def spreadsheets_update_value(
         projects: list,
         wrapper_services: Aiogoogle
 ) -> None:
-    now_date_time = datetime.now().strftime(FORMAT)
     service = await wrapper_services.discover('sheets', 'v4')
+    TABLE_VALUES_TEMPLATE[0][1] += datetime.now().strftime(FORMAT)
     table_values = [
-        TABLE_VALUES_TEMPLATE[0][1] + now_date_time,
+        TABLE_VALUES_TEMPLATE[0],
         *[list(map(
             str,
             [project['name'], project['duration'], project['description']])

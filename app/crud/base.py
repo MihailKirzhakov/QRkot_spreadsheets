@@ -74,17 +74,6 @@ class CRUDBase(Generic[ModelType]):
         await session.commit()
         return db_data
 
-    async def get_project_by_name(
-            self,
-            project_name: str,
-            session: AsyncSession,
-    ) -> Optional[int]:
-        return (await session.execute(
-            select(self.model.id).where(
-                self.model.name == project_name
-            )
-        )).scalars().first()
-
     async def get_all_open(
         self,
         session: AsyncSession,

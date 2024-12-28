@@ -1,4 +1,3 @@
-# C:\Dev\cat_charity_fund\app\models\charity_project.py
 from sqlalchemy import Column, String, Text
 
 from app.constants.constants import MAX_NAME_LENGTH
@@ -12,12 +11,9 @@ class CharityProject(InvestmentBaseModel):
     description = Column(Text, nullable=False)
 
     def __repr__(self):
+        base_repr = super().__repr__()
         return (
-            f'full_amount={self.full_amount}, '
-            f'invested_amount={self.invested_amount}, '
-            f'fully_invested={self.fully_invested}, '
-            f'create_date={self.create_date}, '
-            f'close_date={self.close_date}'
+            f'{base_repr}, '
             f'CharityProject(name={self.name}, '
             f'description={self.description[:20]}...)'
         )

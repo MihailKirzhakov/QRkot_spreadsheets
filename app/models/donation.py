@@ -1,4 +1,3 @@
-# C:\Dev\cat_charity_fund\app\models\donation.py
 from sqlalchemy import Column, ForeignKey, Integer, Text
 
 from app.models.base import InvestmentBaseModel
@@ -9,12 +8,9 @@ class Donation(InvestmentBaseModel):
     comment = Column(Text)
 
     def __repr__(self):
+        base_repr = super().__repr__()
         return (
-            f'full_amount={self.full_amount}, '
-            f'invested_amount={self.invested_amount}, '
-            f'fully_invested={self.fully_invested}, '
-            f'create_date={self.create_date}, '
-            f'close_date={self.close_date}'
+            f'{base_repr}, '
             f'Donation(user_id={self.user_id}, '
             f'comment={self.comment})'
         )

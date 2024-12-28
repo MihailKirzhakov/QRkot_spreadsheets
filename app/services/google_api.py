@@ -3,7 +3,7 @@ from copy import deepcopy
 
 from aiogoogle import Aiogoogle
 
-from app.constants.constants import ConstantNumbers
+from app.constants.constants import MAX_COLS, MAX_ROWS
 from app.core.config import settings
 
 FORMAT = '%Y/%m/%d %H:%M:%S'
@@ -18,8 +18,8 @@ SPREADSHEET_TEMPLATE: dict = dict(
         sheetId=0,
         title='Лист1',
         gridProperties=dict(
-            rowCount=ConstantNumbers.MAX_ROWS,
-            columnCount=ConstantNumbers.MAX_COLS,
+            rowCount=MAX_ROWS,
+            columnCount=MAX_COLS,
         )
     ))]
 )
@@ -83,14 +83,14 @@ async def spreadsheets_update_value(
         'values': table_values
     }
 
-    if len(projects) > ConstantNumbers.MAX_ROWS:
+    if len(projects) > MAX_ROWS:
         raise ValueError(
             'Данные не помещаются в таблицу. '
-            f'Максимальное число строк {ConstantNumbers.MAX_ROWS}.'
+            f'Максимальное число строк {MAX_ROWS}.'
         )
 
     range_end_row = len(table_values)
-    range_end_col = ConstantNumbers.MAX_COLS
+    range_end_col = MAX_COLS
 
     await wrapper_services.as_service_account(
         service.spreadsheets.values.update(

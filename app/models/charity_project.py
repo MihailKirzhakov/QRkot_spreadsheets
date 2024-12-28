@@ -1,13 +1,13 @@
 # C:\Dev\cat_charity_fund\app\models\charity_project.py
 from sqlalchemy import Column, String, Text
 
-from app.constants.constants import ConstantNumbers
+from app.constants.constants import MAX_NAME_LENGTH
 from app.models.base import InvestmentBaseModel
 
 
 class CharityProject(InvestmentBaseModel):
     name = Column(
-        String(ConstantNumbers.MAX_NAME_LENGTH), unique=True, nullable=False
+        String(MAX_NAME_LENGTH), unique=True, nullable=False
     )
     description = Column(Text, nullable=False)
 

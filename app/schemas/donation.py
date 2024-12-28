@@ -3,13 +3,13 @@ from typing import Optional
 
 from pydantic import Field, StrictBool, BaseModel
 
-from app.constants.constants import ConstantNumbers
+from app.constants.constants import EXAMPLE_AMOUNT
 from .charityproject import NonNegativeInt
 
 
 class DonationCreate(BaseModel):
     full_amount: NonNegativeInt = Field(
-        example=ConstantNumbers.EXAMPLE_AMOUNT
+        example=EXAMPLE_AMOUNT
     )
     comment: Optional[str]
 

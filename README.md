@@ -59,29 +59,6 @@ uvicorn app.main:app
 ## Примеры запросов к API
 Все запросы делались в приложении [Postman](https://www.postman.com/)
 
-*Создание проекта для пожертвований*
-- POST charity_project
-- http://127.0.0.1:8000/charity_project/
-```
-{
-    "name": "string",
-    "description": "string",
-    "full_amount": 0
-}
-```
-*Ответ*
-```
-{
-    "name": "string",
-    "description": "string",
-    "full_amount": 0,
-    "id": 0,
-    "invested_amount": 0,
-    "fully_invested": true,
-    "create_date": "2019-08-24T14:15:22Z",
-    "close_date": "2019-08-24T14:15:22Z"
-}
-```
 *Создание пожертвования*
 - POST donation
 - http://127.0.0.1:8000/donation/

@@ -59,9 +59,9 @@ uvicorn app.main:app
 ## Примеры запросов к API
 Все запросы делались в приложении [Postman](https://www.postman.com/)
 
-POST charity_project
-
-http://127.0.0.1:8000/charity_project/
+*Создание проекта для пожертвований*
+- POST charity_project
+- http://127.0.0.1:8000/charity_project/
 ```
 {
     "name": "string",
@@ -69,7 +69,7 @@ http://127.0.0.1:8000/charity_project/
     "full_amount": 0
 }
 ```
-Ответ
+*Ответ*
 ```
 {
     "name": "string",
@@ -82,18 +82,16 @@ http://127.0.0.1:8000/charity_project/
     "close_date": "2019-08-24T14:15:22Z"
 }
 ```
-Создание пожертвования
-
-POST donation
-
-http://127.0.0.1:8000/donation/
+*Создание пожертвования*
+- POST donation
+- http://127.0.0.1:8000/donation/
 ```
 {
     "full_amount": 0,
     "comment": "string"
 }
 ```
-Ответ
+*Ответ*
 ```
 {
     "full_amount": 0,
@@ -102,18 +100,16 @@ http://127.0.0.1:8000/donation/
     "create_date": "2019-08-24T14:15:22Z"
 }
 ```
-Регистрация пользователя
-
-POST user
-
-http://127.0.0.1:8000/auth/register
+*Регистрация пользователя*
+- POST user
+- http://127.0.0.1:8000/auth/register
 ```
 {
     "email": "{{firstUserEmail}}",
     "password": "{{firstUserPassword}}"
 }
 ```
-Ответ
+*Ответ*
 ```
 {
   "id": 1,

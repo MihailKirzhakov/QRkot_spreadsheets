@@ -1,4 +1,3 @@
-# C:\Dev\cat_charity_fund\app\api\endpoints\donation.py
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -33,7 +32,8 @@ async def create_donation(
         invest_donation = invest_donations(
             new_donation, targets
         )
-        await donation_crud.save_changes(session, invest_donation)
+        session.add_all(invest_donation)
+    await session.commit()
     await session.refresh(new_donation)
     return new_donation
 

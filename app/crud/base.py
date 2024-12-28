@@ -1,4 +1,3 @@
-# C:\Dev\cat_charity_fund\app\crud\base.py
 from typing import Optional, TypeVar, Generic, List, Dict
 
 from fastapi.encoders import jsonable_encoder
@@ -110,13 +109,7 @@ class CRUDBase(Generic[ModelType]):
             )
         )).scalars().all()
 
-    async def save_changes(
-        self, session: AsyncSession, objects: ModelType
-    ) -> None:
-        session.add_all(objects)
-        await session.commit()
-
-    async def get_objects_by_completion_rate(
+    async def get_completed_objects(
         self,
         session: AsyncSession
     ) -> List[Dict[str, str]]:

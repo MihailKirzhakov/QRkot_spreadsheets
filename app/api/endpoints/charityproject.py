@@ -1,4 +1,3 @@
-# C:\Dev\cat_charity_fund\app\api\endpoints\charityproject.py
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -34,10 +33,11 @@ async def create_charity_project(
 ):
     await check_name_duplicate(project.name, session)
     new_room = await charityproject_crud.create(project, session)
-    sources = await donation_crud.get_all_open(session)
-    if sources:
-        invest_project = invest_donations(new_room, sources)
-        await charityproject_crud.save_changes(session, invest_project)
+    invest_project = invest_donations(
+        new_room, await donation_crud.get_all_open(session)
+    )
+    session.add_all(invest_project)
+    await session.commit()
     await session.refresh(new_room)
     return new_room
 

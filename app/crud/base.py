@@ -98,7 +98,7 @@ class CRUDBase(Generic[ModelType]):
             )
         )).scalars().all()
 
-    async def get_completed_objects(
+    async def get_completed(
         self,
         session: AsyncSession
     ) -> List[Dict[str, str]]:

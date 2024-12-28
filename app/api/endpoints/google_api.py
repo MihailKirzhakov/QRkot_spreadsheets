@@ -23,7 +23,7 @@ async def get_report(
     session: AsyncSession = Depends(get_async_session),
     wrapper_services: Aiogoogle = Depends(get_service)
 ):
-    projects = await charityproject_crud.get_completed_objects(
+    projects = await charityproject_crud.get_completed(
         session
     )
     duration_projects = await get_projects_by_duration(projects)

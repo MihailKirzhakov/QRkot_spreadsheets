@@ -33,10 +33,11 @@ async def create_charity_project(
 ):
     await check_name_duplicate(project.name, session)
     new_room = await charityproject_crud.create(project, session)
-    investment = invest_donations(
-        new_room, await donation_crud.get_all_open(session)
+    session.add_all(
+        invest_donations(
+            new_room, await donation_crud.get_all_open(session)
+        )
     )
-    session.add_all(investment)
     await session.commit()
     await session.refresh(new_room)
     return new_room

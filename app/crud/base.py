@@ -113,8 +113,7 @@ class CRUDBase(Generic[ModelType]):
     async def save_changes(
         self, session: AsyncSession, *objects: ModelType
     ) -> None:
-        for obj in objects:
-            session.add(obj)
+        session.add(*objects)
         await session.commit()
 
     async def get_objects_by_completion_rate(

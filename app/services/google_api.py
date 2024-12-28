@@ -40,7 +40,7 @@ async def spreadsheets_create(wrapper_services: Aiogoogle) -> tuple[str, str]:
         service.spreadsheets.create(json=spreadsheet_body)
     )
     spreadsheet_id = response['spreadsheetId']
-    report_url = f'https://docs.google.com/spreadsheets/d/{spreadsheet_id}'
+    report_url = response['spreadsheetUrl']
     return spreadsheet_id, report_url
 
 

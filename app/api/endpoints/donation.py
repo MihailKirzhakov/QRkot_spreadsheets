@@ -29,12 +29,13 @@ async def create_donation(
 ):
     new_donation = await donation_crud.create(donation, session, user)
     targets = await charityproject_crud.get_all_open(session)
-    invest_donation = invest_donations(
-        new_donation, targets
-    )
-    await donation_crud.save_changes(session, new_donation, invest_donation)
-    await session.refresh(invest_donation)
-    return invest_donation
+    if targets:
+        invest_donation = invest_donations(
+            new_donation, targets
+        )
+        await donation_crud.save_changes(session, new_donation, *invest_donation)
+    await session.refresh(new_donation)
+    return new_donation
 
 
 @router.get(

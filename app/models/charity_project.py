@@ -11,9 +11,8 @@ class CharityProject(InvestmentBaseModel):
     description = Column(Text, nullable=False)
 
     def __repr__(self):
-        base_repr = super().__repr__()
         return (
-            f'{base_repr}, '
+            f'{super().__repr__()}, '
             f'CharityProject(name={self.name}, '
             f'description={self.description[:20]}...)'
         )

@@ -35,8 +35,9 @@ async def create_charity_project(
     await check_name_duplicate(project.name, session)
     new_room = await charityproject_crud.create(project, session)
     sources = await donation_crud.get_all_open(session)
-    invest_project = invest_donations(new_room, sources)
-    await charityproject_crud.save_changes(session, new_room, *invest_project)
+    if sources:
+        invest_project = invest_donations(new_room, sources)
+        await charityproject_crud.save_changes(session, invest_project)
     await session.refresh(new_room)
     return new_room
 

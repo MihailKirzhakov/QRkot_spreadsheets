@@ -45,7 +45,7 @@ class CRUDBase(Generic[ModelType]):
             create_data['user_id'] = user.id
         db_data = self.model(**create_data)
         session.add(db_data)
-        await session.commit()
+        await session.flush()
         await session.refresh(db_data)
         return db_data
 
@@ -93,7 +93,7 @@ class CRUDBase(Generic[ModelType]):
         return (
             await session.execute(
                 select(self.model).filter(
-                    self.model.fully_invested.is_(False)
+                    self.model.fully_invested == 0
                 ).order_by(asc(self.model.create_date))
             )
         ).scalars().all()
@@ -111,9 +111,9 @@ class CRUDBase(Generic[ModelType]):
         )).scalars().all()
 
     async def save_changes(
-        self, session: AsyncSession, *objects: ModelType
+        self, session: AsyncSession, objects: ModelType
     ) -> None:
-        session.add(*objects)
+        session.add_all(objects)
         await session.commit()
 
     async def get_objects_by_completion_rate(

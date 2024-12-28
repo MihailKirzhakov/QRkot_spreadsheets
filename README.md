@@ -42,11 +42,86 @@ python -m pip install --upgrade pip
 ```
 pip install -r requirements.txt
 ```
+В корневой папке есть файл .env.example,
+с примером того как надо заполнять .env файл.
 
 ## Запуск проекта
-
+Применить миграции:
+```
+alembic upgrade head
+```
+Запустить проект:
 ```
 uvicorn app.main:app
+```
+Сервис QRKot будет доступен по адресу: http://127.0.0.1:8000
+
+## Примеры запросов к API
+Все запросы делались в приложении [Postman](https://www.postman.com/)
+
+POST charity_project
+
+http://127.0.0.1:8000/charity_project/
+```
+{
+    "name": "string",
+    "description": "string",
+    "full_amount": 0
+}
+```
+Ответ
+```
+{
+    "name": "string",
+    "description": "string",
+    "full_amount": 0,
+    "id": 0,
+    "invested_amount": 0,
+    "fully_invested": true,
+    "create_date": "2019-08-24T14:15:22Z",
+    "close_date": "2019-08-24T14:15:22Z"
+}
+```
+Создание пожертвования
+
+POST donation
+
+http://127.0.0.1:8000/donation/
+```
+{
+    "full_amount": 0,
+    "comment": "string"
+}
+```
+Ответ
+```
+{
+    "full_amount": 0,
+    "comment": "string",
+    "id": 0,
+    "create_date": "2019-08-24T14:15:22Z"
+}
+```
+Регистрация пользователя
+
+POST user
+
+http://127.0.0.1:8000/auth/register
+```
+{
+    "email": "{{firstUserEmail}}",
+    "password": "{{firstUserPassword}}"
+}
+```
+Ответ
+```
+{
+  "id": 1,
+  "email": "user@example.com",
+  "is_active": true,
+  "is_superuser": false,
+  "is_verified": false
+}
 ```
 
 Автор: [Михаил Киржаков](https://github.com/MihailKirzhakov)

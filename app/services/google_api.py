@@ -3,10 +3,19 @@ from copy import deepcopy
 
 from aiogoogle import Aiogoogle
 
-from app.constants.constants import MAX_COLS, MAX_ROWS
+from app.constants.constants import MAX_ROWS
 from app.core.config import settings
 
 FORMAT = '%Y/%m/%d %H:%M:%S'
+
+
+TABLE_VALUES_TEMPLATE = [
+    ['Отчёт от', ''],
+    ['Топ проектов по скорости закрытия'],
+    ['Название проекта', 'Время сбора', 'Описание']
+]
+
+range_cols = len(TABLE_VALUES_TEMPLATE[2])
 
 SPREADSHEET_TEMPLATE: dict = dict(
     properties=dict(
@@ -19,16 +28,15 @@ SPREADSHEET_TEMPLATE: dict = dict(
         title='Лист1',
         gridProperties=dict(
             rowCount=MAX_ROWS,
-            columnCount=MAX_COLS,
+            columnCount=range_cols,
         )
     ))]
 )
 
-TABLE_VALUES_TEMPLATE = [
-    ['Отчёт от', ''],
-    ['Топ проектов по скорости закрытия'],
-    ['Название проекта', 'Время сбора', 'Описание']
-]
+ERROR_MESSAGE = (
+    'Данные не помещаются в таблицу. '
+    'Максимальное число строк: {}, максимальное число колонок: {}.'
+)
 
 
 async def spreadsheets_create(wrapper_services: Aiogoogle) -> tuple[str, str]:
@@ -67,7 +75,7 @@ async def spreadsheets_update_value(
         wrapper_services: Aiogoogle
 ) -> None:
     service = await wrapper_services.discover('sheets', 'v4')
-    TABLE_VALUES_TEMPLATE[0][1] += datetime.now().strftime(FORMAT)
+    TABLE_VALUES_TEMPLATE[0][1] = datetime.now().strftime(FORMAT)
     table_values = [
         TABLE_VALUES_TEMPLATE[0],
         *[list(map(
@@ -81,19 +89,15 @@ async def spreadsheets_update_value(
         'values': table_values
     }
 
-    if len(projects) > MAX_ROWS:
-        raise ValueError(
-            'Данные не помещаются в таблицу. '
-            f'Максимальное число строк {MAX_ROWS}.'
-        )
+    range_rows = (len(TABLE_VALUES_TEMPLATE) + len(projects))
 
-    range_end_row = len(table_values)
-    range_end_col = MAX_COLS
+    if range_rows * range_cols > MAX_ROWS * range_cols:
+        raise ValueError(ERROR_MESSAGE.format(MAX_ROWS, range_cols))
 
     await wrapper_services.as_service_account(
         service.spreadsheets.values.update(
             spreadsheetId=spreadsheet_id,
-            range=f'R1C1:R{range_end_row}C{range_end_col}',
+            range=f'R1C1:R{range_rows}C{range_cols}',
             valueInputOption='USER_ENTERED',
             json=update_body
         )

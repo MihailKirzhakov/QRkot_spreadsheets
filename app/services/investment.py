@@ -7,7 +7,7 @@ def invest_donations(
     target: InvestmentBaseModel,
     sources: list[InvestmentBaseModel]
 ) -> list[InvestmentBaseModel]:
-    changed_objects = []
+    changed_sources = []
     for source in sources:
         investment_amount = min(
             source.full_amount - source.invested_amount,
@@ -18,7 +18,7 @@ def invest_donations(
             if item.full_amount == item.invested_amount:
                 item.fully_invested = True
                 item.close_date = datetime.now()
-        changed_objects.append(source)
+        changed_sources.append(source)
         if target.fully_invested:
             break
-    return changed_objects
+    return changed_sources

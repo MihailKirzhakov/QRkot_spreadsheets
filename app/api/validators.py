@@ -8,8 +8,7 @@ from app.constants.constants import (
     DELETE_DEPOSITED_PROJECT, EDIT_DELETE_CLOSED_PROJECT,
     LESS_REQUIERED_AMOUNT, PROJECT_NAME_EXISTS, PROJECT_NOT_FOUND
 )
-from app.crud.base import charityproject_crud
-from app.crud.charity_project import charity_crud
+from app.crud.charity_project import charityproject_crud
 from app.models import CharityProject
 
 
@@ -17,7 +16,7 @@ async def check_name_duplicate(
         project_name: str,
         session: AsyncSession,
 ) -> None:
-    project_id = await charity_crud.get_project_by_name(
+    project_id = await charityproject_crud.get_project_by_name(
         project_name, session
     )
     if project_id is not None:

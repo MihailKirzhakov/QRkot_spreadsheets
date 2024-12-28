@@ -107,5 +107,4 @@ class CRUDBase(Generic[ModelType]):
         ).scalars().all()
 
 
-charityproject_crud = CRUDBase(CharityProject)
 donation_crud = CRUDBase(Donation)

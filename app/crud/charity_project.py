@@ -21,4 +21,4 @@ class CRUDCharityProject(CRUDBase):
         )).scalars().first()
 
 
-charity_crud = CRUDCharityProject(CharityProject)
+charityproject_crud = CRUDCharityProject(CharityProject)

@@ -10,7 +10,8 @@ from app.api.validators import (
 )
 from app.core.db import get_async_session
 from app.core.user import current_superuser
-from app.crud.base import charityproject_crud, donation_crud
+from app.crud.base import donation_crud
+from app.crud.charity_project import charityproject_crud
 from app.schemas.charityproject import (
     CharityProjectDB,
     CharityProjectBase,

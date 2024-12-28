@@ -74,9 +74,10 @@ async def spreadsheets_update_value(
         wrapper_services: Aiogoogle
 ) -> None:
     service = await wrapper_services.discover('sheets', 'v4')
-    TABLE_VALUES_TEMPLATE[0][1] = datetime.now().strftime(FORMAT)
+    table_values_template = deepcopy(TABLE_VALUES_TEMPLATE)
+    table_values_template[0][1] = datetime.now().strftime(FORMAT)
     table_values = [
-        *TABLE_VALUES_TEMPLATE,
+        *table_values_template,
         *[list(map(
             str,
             [project['name'], project['duration'], project['description']])

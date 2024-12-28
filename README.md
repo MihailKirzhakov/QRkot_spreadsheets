@@ -17,9 +17,7 @@
 
 ```
 git clone git@github.com:MihailKirzhakov/QRkot_spreadsheets.git
-```
 
-```
 cd QRkot_spreadsheets
 ```
 

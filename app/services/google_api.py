@@ -90,22 +90,12 @@ async def spreadsheets_update_value(
     }
 
     range_rows = len(table_values)
-    range_cols = len(table_values[2])
-    row_count = (
-        SPREADSHEET_TEMPLATE['sheets'][0][
-            'properties'
-        ]['gridProperties']['rowCount']
-    )
-    column_count = (
-        SPREADSHEET_TEMPLATE['sheets'][0][
-            'properties'
-        ]['gridProperties']['columnCount']
-    )
+    range_cols = max(len(row) for row in table_values)
 
-    if range_rows * range_cols > row_count * column_count:
+    if range_rows * range_cols > MAX_ROWS * MAX_COLS:
         raise ValueError(ERROR_MESSAGE.format(
             range_rows, range_cols,
-            row_count, column_count
+            MAX_ROWS, MAX_COLS
         ))
 
     await wrapper_services.as_service_account(
